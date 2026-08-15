@@ -74,7 +74,15 @@ if (!i18n.isInitialized) {
 const enUSLoadPromise = loadLangResources('en-US')
 enUSLoadPromise.then((resources) => {
   if (Object.keys(resources).length > 0) {
+    // Add to 'translation' namespace for default useTranslation() calls (existing behavior)
     i18n.addResourceBundle('en-US', 'translation', resources, true, true)
+    // Also add 'plugin', 'plugin-tags' and 'common' as standalone namespaces for useTranslation('plugin') etc.
+    if (resources.plugin && !i18n.hasResourceBundle('en-US', 'plugin'))
+      i18n.addResourceBundle('en-US', 'plugin', resources.plugin, true, true)
+    if (resources['plugin-tags'] && !i18n.hasResourceBundle('en-US', 'plugin-tags'))
+      i18n.addResourceBundle('en-US', 'plugin-tags', resources['plugin-tags'], true, true)
+    if (resources.common && !i18n.hasResourceBundle('en-US', 'common'))
+      i18n.addResourceBundle('en-US', 'common', resources.common, true, true)
     // Trigger re-render if current language is en-US
     if (!i18n.language || i18n.language === 'en-US')
       i18n.changeLanguage('en-US')
@@ -88,6 +96,13 @@ export const changeLanguage = async (lng?: string) => {
   if (!i18n.hasResourceBundle(lng, 'translation')) {
     const resource = await loadLangResources(lng)
     i18n.addResourceBundle(lng, 'translation', resource, true, true)
+    // Also add standalone namespaces for useTranslation('plugin') etc.
+    if (resource.plugin && !i18n.hasResourceBundle(lng, 'plugin'))
+      i18n.addResourceBundle(lng, 'plugin', resource.plugin, true, true)
+    if (resource['plugin-tags'] && !i18n.hasResourceBundle(lng, 'plugin-tags'))
+      i18n.addResourceBundle(lng, 'plugin-tags', resource['plugin-tags'], true, true)
+    if (resource.common && !i18n.hasResourceBundle(lng, 'common'))
+      i18n.addResourceBundle(lng, 'common', resource.common, true, true)
   }
   await i18n.changeLanguage(lng)
 }

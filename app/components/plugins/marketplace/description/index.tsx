@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n-config/i18next-config'
 
 type DescriptionProps = {
   locale?: string
@@ -10,7 +11,9 @@ const Description = ({
 }: DescriptionProps) => {
   const { t } = useTranslation('plugin')
   const { t: tCommon } = useTranslation('common')
-  const isZhHans = localeFromProps === 'zh-Hans'
+  // Use current i18n language to determine display language
+  const currentLang = i18n.language || localeFromProps || 'en-US'
+  const isZhHans = currentLang.startsWith('zh')
 
   return (
     <>
