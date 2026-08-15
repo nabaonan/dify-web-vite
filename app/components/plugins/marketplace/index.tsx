@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { MarketplaceContextProvider } from './context'
 import Description from './description'
 import IntersectionLine from './intersection-line'
@@ -19,7 +22,7 @@ type MarketplaceProps = {
   scrollContainerId?: string
   showSearchParams?: boolean
 }
-const Marketplace = async ({
+const Marketplace = ({
   locale,
   searchBoxAutoAnimate = true,
   showInstallButton = true,
@@ -30,13 +33,17 @@ const Marketplace = async ({
   scrollContainerId,
   showSearchParams = true,
 }: MarketplaceProps) => {
-  let marketplaceCollections: any = []
-  let marketplaceCollectionPluginsMap = {}
-  if (!shouldExclude) {
-    const marketplaceCollectionsAndPluginsData = await getMarketplaceCollectionsAndPlugins()
-    marketplaceCollections = marketplaceCollectionsAndPluginsData.marketplaceCollections
-    marketplaceCollectionPluginsMap = marketplaceCollectionsAndPluginsData.marketplaceCollectionPluginsMap
-  }
+  const [marketplaceCollections, setMarketplaceCollections] = useState<any[]>([])
+  const [marketplaceCollectionPluginsMap, setMarketplaceCollectionPluginsMap] = useState<Record<string, any>>({})
+
+  useEffect(() => {
+    if (!shouldExclude) {
+      getMarketplaceCollectionsAndPlugins().then((data) => {
+        setMarketplaceCollections(data.marketplaceCollections)
+        setMarketplaceCollectionPluginsMap(data.marketplaceCollectionPluginsMap)
+      })
+    }
+  }, [shouldExclude])
 
   return (
     <TanstackQueryInitializer>
