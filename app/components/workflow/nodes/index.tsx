@@ -16,6 +16,20 @@ const CustomNode = (props: NodeProps) => {
   const nodeData = props.data
   const NodeComponent = useMemo(() => NodeComponentMap[nodeData.type], [nodeData.type])
 
+  if (!NodeComponent) {
+    console.warn(`[Workflow] Unknown node type: ${nodeData.type}, falling back to placeholder`)
+    return (
+      <BaseNode
+        id={props.id}
+        data={props.data}
+      >
+        <div className="flex items-center justify-center h-full text-xs text-text-tertiary">
+          Unknown: {nodeData.type}
+        </div>
+      </BaseNode>
+    )
+  }
+
   return (
     <>
       <BaseNode

@@ -115,8 +115,10 @@ export const useChecklist = (nodes: Node[], edges: Edge[]) => {
       }
 
       if (node.type === CUSTOM_NODE) {
+        const nodeMetaData = nodesExtraData![node.data.type]
+        if (!nodeMetaData) continue
         const checkData = getCheckData(node.data)
-        let { errorMessage } = nodesExtraData![node.data.type].checkValid(checkData, t, moreDataForCheckValid)
+        let { errorMessage } = nodeMetaData.checkValid(checkData, t, moreDataForCheckValid)
 
         if (!errorMessage) {
           const availableVars = map[node.id].availableVars
@@ -274,8 +276,13 @@ export const useChecklistBeforePublish = () => {
       else {
         usedVars = getNodeUsedVars(node).filter(v => v.length > 0)
       }
+      const nodeMetaData = nodesExtraData![node.data.type as BlockEnum]
+      if (!nodeMetaData) {
+        notify({ type: 'error', message: `[${node.data.title}] Unknown node type` })
+        return false
+      }
       const checkData = getCheckData(node.data, datasets)
-      const { errorMessage } = nodesExtraData![node.data.type as BlockEnum].checkValid(checkData, t, moreDataForCheckValid)
+      const { errorMessage } = nodeMetaData.checkValid(checkData, t, moreDataForCheckValid)
 
       if (errorMessage) {
         notify({ type: 'error', message: `[${node.data.title}] ${errorMessage}` })
