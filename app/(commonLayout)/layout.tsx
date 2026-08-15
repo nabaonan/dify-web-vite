@@ -12,24 +12,26 @@ import GotoAnything from '@/app/components/goto-anything'
 
 const Layout = () => {
   return (
-    <>
+    <div className="flex h-full flex-col">
       <GA gaType={GaType.admin} />
       <SwrInitializer>
         <AppContextProvider>
           <EventEmitterContextProvider>
             <ProviderContextProvider>
               <ModalContextProvider>
-                <HeaderWrapper>
-                  <Header />
-                </HeaderWrapper>
-                <Outlet />
+                <div className="flex min-h-0 grow flex-col">
+                  <HeaderWrapper>
+                    <Header />
+                  </HeaderWrapper>
+                  <Outlet />
+                </div>
                 <GotoAnything />
               </ModalContextProvider>
             </ProviderContextProvider>
           </EventEmitterContextProvider>
         </AppContextProvider>
       </SwrInitializer>
-    </>
+    </div>
   )
 }
 export default Layout

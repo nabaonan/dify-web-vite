@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 interface Router {
-  push: (path: string) => void
-  replace: (path: string) => void
+  push: (path: string, opts?: { scroll?: boolean }) => void
+  replace: (path: string, opts?: { scroll?: boolean }) => void
   back: () => void
   forward: () => void
   refresh: () => void

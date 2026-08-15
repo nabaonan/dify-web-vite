@@ -78,29 +78,31 @@ const AppLayout = ({
     return <div className='flex h-screen w-screen items-center justify-center'><Loading type='app' /></div>
 
   return (
-    <ThemeProvider
-      attribute='data-theme'
-      defaultTheme='system'
-      enableSystem
-      disableTransitionOnChange
-      enableColorScheme={false}
-    >
-      <BrowserInitializer>
-        <SentryInitializer>
-          <TanstackQueryInitializer>
-            <I18n locale={locale as any}>
-              <ToastProvider>
-                <GlobalPublicStoreProvider>
-                  {children || <Outlet />}
-                </GlobalPublicStoreProvider>
-              </ToastProvider>
-            </I18n>
-          </TanstackQueryInitializer>
-        </SentryInitializer>
-      </BrowserInitializer>
-      <RoutePrefixHandle />
-      <Zendesk />
-    </ThemeProvider>
+    <div className="h-full">
+      <ThemeProvider
+        attribute='data-theme'
+        defaultTheme='system'
+        enableSystem
+        disableTransitionOnChange
+        enableColorScheme={false}
+      >
+        <BrowserInitializer>
+          <SentryInitializer>
+            <TanstackQueryInitializer>
+              <I18n locale={locale as any}>
+                <ToastProvider>
+                  <GlobalPublicStoreProvider>
+                    {children || <Outlet />}
+                  </GlobalPublicStoreProvider>
+                </ToastProvider>
+              </I18n>
+            </TanstackQueryInitializer>
+          </SentryInitializer>
+        </BrowserInitializer>
+        <RoutePrefixHandle />
+        <Zendesk />
+      </ThemeProvider>
+    </div>
   )
 }
 

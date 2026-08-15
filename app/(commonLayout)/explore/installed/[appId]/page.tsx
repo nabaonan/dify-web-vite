@@ -1,17 +1,12 @@
-import React from 'react'
+'use client'
+
+import { useParams } from 'react-router-dom'
 import Main from '@/app/components/explore/installed-app'
 
-export type IInstalledAppProps = {
-  params: {
-    appId: string
-  }
-}
-
-// Using Next.js page convention for async server components
-async function InstalledApp({ params }: IInstalledAppProps) {
-  const appId = (await params).appId
+function InstalledApp() {
+  const { appId } = useParams<{ appId: string }>()
   return (
-    <Main id={appId} />
+    <Main id={appId!} />
   )
 }
 
