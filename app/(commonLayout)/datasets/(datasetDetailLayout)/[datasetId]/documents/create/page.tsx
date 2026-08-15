@@ -1,20 +1,12 @@
-import React from 'react'
+'use client'
+
+import { useParams } from 'react-router-dom'
 import DatasetUpdateForm from '@/app/components/datasets/create'
 
-export type IProps = {
-  params: Promise<{ datasetId: string }>
+const CreatePage = () => {
+  const { datasetId } = useParams<{ datasetId: string }>()
+
+  return <DatasetUpdateForm datasetId={datasetId} />
 }
 
-const Create = async (props: IProps) => {
-  const params = await props.params
-
-  const {
-    datasetId,
-  } = params
-
-  return (
-    <DatasetUpdateForm datasetId={datasetId} />
-  )
-}
-
-export default Create
+export default CreatePage

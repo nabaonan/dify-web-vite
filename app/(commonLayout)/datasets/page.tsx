@@ -1,6 +1,8 @@
+'use client'
+
 import List from '../../components/datasets/list'
 
-const DatasetList = async () => {
+const DatasetList = () => {
   return <List />
 }
 

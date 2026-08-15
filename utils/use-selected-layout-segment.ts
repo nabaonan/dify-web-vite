@@ -3,44 +3,35 @@ import { useLocation } from 'react-router-dom'
 
 /**
  * Next.js useSelectedLayoutSegment shim for react-router-dom
- * Returns the active segment of the current route
+ * In Next.js app router, this returns the segment of the active layout route.
+ * For route group (commonLayout), the next meaningful segment is returned.
+ * E.g. /datasets/xxx/documents -> 'datasets'
+ *      /app/xxx/configuration -> 'app'
  */
-export function useSelectedLayoutSegment(segmentPath?: string): string | null {
+export function useSelectedLayoutSegment(_segmentPath?: string): string | null {
   const location = useLocation()
 
   return useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
-    if (segmentPath) {
-      // Find the segment after the given path
-      const idx = location.pathname.indexOf(segmentPath)
-      if (idx >= 0) {
-        const remainingPath = location.pathname.slice(idx + segmentPath.length)
-        const nextSegments = remainingPath.split('/').filter(Boolean)
-        return nextSegments[0] || null
-      }
-      return null
-    }
-    // Return last segment
-    return segments[segments.length - 1] || null
-  }, [location.pathname, segmentPath])
+    // Return the first meaningful segment (after route groups if any)
+    // In Next.js app dir, (commonLayout) is a route group and is skipped.
+    // Our paths are like /apps, /datasets/..., /app/... etc.
+    // The first segment is the one we care about for navigation highlighting
+    if (segments.length === 0) return null
+    // Skip known route-group-like prefixes (there are none in actual URLs, 
+    // since route groups are directory names with parentheses which don't appear in URLs)
+    return segments[0] || null
+  }, [location.pathname])
 }
 
 /**
  * Next.js useSelectedLayoutSegments shim for react-router-dom
  */
-export function useSelectedLayoutSegments(segmentPath?: string): string[] {
+export function useSelectedLayoutSegments(_segmentPath?: string): string[] {
   const location = useLocation()
 
   return useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
-    if (segmentPath) {
-      const idx = location.pathname.indexOf(segmentPath)
-      if (idx >= 0) {
-        const remainingPath = location.pathname.slice(idx + segmentPath.length)
-        return remainingPath.split('/').filter(Boolean)
-      }
-      return []
-    }
     return segments
-  }, [location.pathname, segmentPath])
+  }, [location.pathname])
 }

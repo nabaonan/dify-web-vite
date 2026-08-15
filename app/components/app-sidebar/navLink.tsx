@@ -1,9 +1,8 @@
 'use client'
 import React from 'react'
-import { Link as Link } from 'react-router-dom'
+import { Link as Link, useLocation } from 'react-router-dom'
 import classNames from '@/utils/classnames'
 import type { RemixiconComponentType } from '@remixicon/react'
-import { useSelectedLayoutSegment } from '@/utils/use-selected-layout-segment'
 
 export type NavIcon = React.ComponentType<
   React.PropsWithoutRef<React.ComponentProps<'svg'>> & {
@@ -29,16 +28,23 @@ const NavLink = ({
   mode = 'expand',
   disabled = false,
 }: NavLinkProps) => {
-  const segment = useSelectedLayoutSegment()
+  const location = useLocation()
+  const currentPath = location.pathname.toLowerCase()
+  const targetPath = href.toLowerCase()
   const formattedSegment = (() => {
-    let res = segment?.toLowerCase()
-    // logs and annotations use the same nav
-    if (res === 'annotations')
-      res = 'logs'
+    // For sidebar nav, match if current path starts with the href
+    // e.g. /datasets/xxx/documents matches href /datasets/xxx/documents
+    // But also /datasets/xxx/documents/yyy matches href /datasets/xxx/documents
+    if (currentPath === targetPath || currentPath.startsWith(targetPath + '/'))
+      return targetPath.split('/')?.pop()
 
-    return res
+    // logs and annotations use the same nav
+    if (targetPath.includes('/logs') && (currentPath.includes('/logs') || currentPath.includes('/annotations')))
+      return 'logs'
+
+    return undefined
   })()
-  const isActive = href.toLowerCase().split('/')?.pop() === formattedSegment
+  const isActive = formattedSegment !== undefined
   const NavIcon = isActive ? iconMap.selected : iconMap.normal
 
   const renderIcon = () => (
@@ -78,7 +84,7 @@ const NavLink = ({
   return (
     <Link
       key={name}
-      href={href}
+      to={href}
       className={classNames(
         isActive
           ? 'system-sm-semibold border-b-[0.25px] border-l-[0.75px] border-r-[0.25px] border-t-[0.75px] border-effects-highlight-lightmode-off bg-components-menu-item-bg-active text-text-accent-light-mode-only'

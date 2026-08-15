@@ -1,20 +1,12 @@
-import React from 'react'
-import Main from '@/app/components/datasets/documents'
+'use client'
 
-export type IProps = {
-  params: Promise<{ datasetId: string }>
+import { useParams } from 'react-router-dom'
+import Main from "@/app/components/datasets/documents"
+
+const documentsPage = () => {
+  const { datasetId } = useParams<{ datasetId: string }>()
+
+  return <Main datasetId={datasetId} />
 }
 
-const Documents = async (props: IProps) => {
-  const params = await props.params
-
-  const {
-    datasetId,
-  } = params
-
-  return (
-    <Main datasetId={datasetId} />
-  )
-}
-
-export default Documents
+export default documentsPage

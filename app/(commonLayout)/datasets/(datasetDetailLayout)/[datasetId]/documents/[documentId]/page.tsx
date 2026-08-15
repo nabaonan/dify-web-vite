@@ -1,21 +1,12 @@
-import React from 'react'
-import MainDetail from '@/app/components/datasets/documents/detail'
+'use client'
 
-export type IDocumentDetailProps = {
-  params: Promise<{ datasetId: string; documentId: string }>
+import { useParams } from 'react-router-dom'
+import DocumentDetail from '@/app/components/datasets/documents/detail'
+
+const DocumentDetailPage = () => {
+  const { datasetId, documentId } = useParams<{ datasetId: string; documentId: string }>()
+
+  return <DocumentDetail datasetId={datasetId!} documentId={documentId!} />
 }
 
-const DocumentDetail = async (props: IDocumentDetailProps) => {
-  const params = await props.params
-
-  const {
-    datasetId,
-    documentId,
-  } = params
-
-  return (
-    <MainDetail datasetId={datasetId} documentId={documentId} />
-  )
-}
-
-export default DocumentDetail
+export default DocumentDetailPage

@@ -43,6 +43,7 @@ const DatasetsConnect = lazy(() => import('./(commonLayout)/datasets/connect/pag
 const DatasetsCreateFromPipeline = lazy(() => import('./(commonLayout)/datasets/create-from-pipeline/page'))
 
 const DatasetDetailLayout = lazy(() => import('./(commonLayout)/datasets/(datasetDetailLayout)/layout'))
+const DatasetDetailInnerLayout = lazy(() => import('./(commonLayout)/datasets/(datasetDetailLayout)/[datasetId]/layout'))
 const DatasetApi = lazy(() => import('./(commonLayout)/datasets/(datasetDetailLayout)/[datasetId]/api/page'))
 const DatasetSettings = lazy(() => import('./(commonLayout)/datasets/(datasetDetailLayout)/[datasetId]/settings/page'))
 const DatasetHitTesting = lazy(() => import('./(commonLayout)/datasets/(datasetDetailLayout)/[datasetId]/hitTesting/page'))
@@ -161,15 +162,21 @@ const router = createBrowserRouter([
                 path: ':datasetId',
                 element: <SW><DatasetDetailLayout /></SW>,
                 children: [
-                  { path: 'api', element: <SW><DatasetApi /></SW> },
-                  { path: 'settings', element: <SW><DatasetSettings /></SW> },
-                  { path: 'hitTesting', element: <SW><DatasetHitTesting /></SW> },
-                  { path: 'pipeline', element: <SW><DatasetPipeline /></SW> },
-                  { path: 'documents', element: <SW><DatasetDocuments /></SW> },
-                  { path: 'documents/:documentId', element: <SW><DatasetDocument /></SW> },
-                  { path: 'documents/:documentId/settings', element: <SW><DatasetDocSettings /></SW> },
-                  { path: 'documents/create', element: <SW><DatasetDocCreate /></SW> },
-                  { path: 'documents/create-from-pipeline', element: <SW><DatasetDocCreateFromPipeline /></SW> },
+                  { index: true, element: <Navigate to="documents" replace /> },
+                  {
+                    element: <SW><DatasetDetailInnerLayout /></SW>,
+                    children: [
+                      { path: 'api', element: <SW><DatasetApi /></SW> },
+                      { path: 'settings', element: <SW><DatasetSettings /></SW> },
+                      { path: 'hitTesting', element: <SW><DatasetHitTesting /></SW> },
+                      { path: 'pipeline', element: <SW><DatasetPipeline /></SW> },
+                      { path: 'documents', element: <SW><DatasetDocuments /></SW> },
+                      { path: 'documents/:documentId', element: <SW><DatasetDocument /></SW> },
+                      { path: 'documents/:documentId/settings', element: <SW><DatasetDocSettings /></SW> },
+                      { path: 'documents/create', element: <SW><DatasetDocCreate /></SW> },
+                      { path: 'documents/create-from-pipeline', element: <SW><DatasetDocCreateFromPipeline /></SW> },
+                    ],
+                  },
                 ],
               },
             ],

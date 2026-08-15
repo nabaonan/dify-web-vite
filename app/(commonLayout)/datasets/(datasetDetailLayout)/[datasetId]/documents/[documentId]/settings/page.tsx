@@ -1,21 +1,12 @@
-import React from 'react'
+'use client'
+
+import { useParams } from 'react-router-dom'
 import Settings from '@/app/components/datasets/documents/detail/settings'
 
-export type IProps = {
-  params: Promise<{ datasetId: string; documentId: string }>
+const DocumentSettingsPage = () => {
+  const { datasetId, documentId } = useParams<{ datasetId: string; documentId: string }>()
+
+  return <Settings datasetId={datasetId!} documentId={documentId!} />
 }
 
-const DocumentSettings = async (props: IProps) => {
-  const params = await props.params
-
-  const {
-    datasetId,
-    documentId,
-  } = params
-
-  return (
-    <Settings datasetId={datasetId} documentId={documentId} />
-  )
-}
-
-export default DocumentSettings
+export default DocumentSettingsPage

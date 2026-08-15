@@ -1,20 +1,12 @@
-import React from 'react'
-import Main from '@/app/components/datasets/hit-testing'
+'use client'
 
-type Props = {
-  params: Promise<{ datasetId: string }>
+import { useParams } from 'react-router-dom'
+import Main from "@/app/components/datasets/hit-testing"
+
+const hitTestingPage = () => {
+  const { datasetId } = useParams<{ datasetId: string }>()
+
+  return <Main datasetId={datasetId} />
 }
 
-const HitTesting = async (props: Props) => {
-  const params = await props.params
-
-  const {
-    datasetId,
-  } = params
-
-  return (
-    <Main datasetId={datasetId} />
-  )
-}
-
-export default HitTesting
+export default hitTestingPage
