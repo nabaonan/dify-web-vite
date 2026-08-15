@@ -11,7 +11,6 @@ const requireSilent = async (lang: string, namespace: string) => {
   catch {
     res = (await import(`../i18n/en-US/${namespace}.ts`)).default
   }
-
   return res
 }
 
@@ -58,27 +57,34 @@ export const loadLangResources = async (lang: string) => {
   return resources
 }
 
-// Load en-US resources first to make sure fallback works
-const getInitialTranslations = () => {
-  // In Vite, we can't use synchronous require
-  // Resources will be loaded asynchronously on first use
-  return {
-    'en-US': {
-      translation: {} as Record<string, any>,
-    },
-  }
-}
-
+// Initialize i18n with empty resources first
 if (!i18n.isInitialized) {
   i18n.use(initReactI18next).init({
     lng: undefined,
     fallbackLng: 'en-US',
-    resources: getInitialTranslations(),
+    resources: {
+      'en-US': {
+        translation: {},
+      },
+    },
   })
 }
 
+// Immediately start loading en-US resources in the background
+const enUSLoadPromise = loadLangResources('en-US')
+enUSLoadPromise.then((resources) => {
+  if (Object.keys(resources).length > 0) {
+    i18n.addResourceBundle('en-US', 'translation', resources, true, true)
+    // Trigger re-render if current language is en-US
+    if (!i18n.language || i18n.language === 'en-US')
+      i18n.changeLanguage('en-US')
+  }
+})
+
 export const changeLanguage = async (lng?: string) => {
   if (!lng) return
+  // Wait for en-US preload first
+  await enUSLoadPromise
   if (!i18n.hasResourceBundle(lng, 'translation')) {
     const resource = await loadLangResources(lng)
     i18n.addResourceBundle(lng, 'translation', resource, true, true)
